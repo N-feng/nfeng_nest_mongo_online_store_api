@@ -9,7 +9,6 @@ export type SubCategoryDocument = SubCategory & Document;
 })
 export class SubCategory extends Document {
   @Prop({
-    type: String,
     required: [true, 'Name is required'], // Adding custom error message
     trim: true,
   })

@@ -8,14 +8,12 @@ export type VariantTypeDocument = VariantType & Document;
 })
 export class VariantType extends Document {
   @Prop({
-    type: String,
     required: [true, 'Name is required'], // Adding custom error message
     trim: true,
   })
   name: string;
 
   @Prop({
-    type: String,
     required: [true, 'Type is required'], // Adding custom error message
     trim: true,
   })

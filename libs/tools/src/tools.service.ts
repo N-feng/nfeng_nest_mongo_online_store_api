@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import COS = require('cos-nodejs-sdk-v5');
+import { extname } from 'path';
 import { format } from 'silly-datetime';
 
 @Injectable()
 export class ToolsService {
-  getCosUploadFile(filename, folder?: string) {
+  getCosUploadFile(file, folder?: string) {
     //1、获取当前日期 20210920
     const today = format(new Date(), 'YYYYMMDD');
 
@@ -15,8 +16,11 @@ export class ToolsService {
     //  20210920/4124215212.png
     //20210412/1618196478.826.png
     // const saveDir = dir + '/' + d + path.extname(filename);
+    const name = file.originalname.split('.')[0];
+    const extension = extname(file.originalname);
+    const filename = `${name}_${today}${extension}`;
     const dir = folder ? `online_store/${folder}` : 'online_store';
-    const saveDir = dir + '/' + today + '_' + filename;
+    const saveDir = dir + '/' + filename;
     return saveDir;
   }
 
@@ -51,5 +55,11 @@ export class ToolsService {
         },
       );
     });
+  }
+
+  async uploadFile(file, folder?: string) {
+    const saveDir = this.getCosUploadFile(file, folder);
+    await this.uploadCos(saveDir, file.buffer);
+    return process.env.cosUrl + '/' + saveDir;
   }
 }

@@ -1,9 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AdminModule } from './admin.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as path from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AdminModule);
+  const app = await NestFactory.create<NestExpressApplication>(AdminModule);
+
+  // 配置静态资源目录
+  app.useStaticAssets(path.join(__dirname, '../../../', 'public/products'), {
+    prefix: '/image/products',
+  });
 
   const options = new DocumentBuilder()
     .setTitle('管理后台API')

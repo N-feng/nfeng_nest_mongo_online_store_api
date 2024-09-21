@@ -10,10 +10,34 @@ import { VariantTypeService } from './variant-type/variant-type.service';
 import { VariantTypeController } from './variant-type/variant-type.controller';
 import { VariantService } from './variant/variant.service';
 import { VariantController } from './variant/variant.controller';
+import { ProductService } from './product/product.service';
+import { ProductController } from './product/product.controller';
+import { PosterService } from './poster/poster.service';
+import { PosterController } from './poster/poster.controller';
+import { CouponCodeService } from './coupon-code/coupon-code.service';
+import { CouponCodeController } from './coupon-code/coupon-code.controller';
 
 @Module({
   imports: [CommonModule],
-  controllers: [CategoryController, SubCategoryController, BrandController, VariantTypeController, VariantController],
-  providers: [CategoryService, SubCategoryService, BrandService, VariantTypeService, VariantService],
+  controllers: [
+    CategoryController,
+    SubCategoryController,
+    BrandController,
+    VariantTypeController,
+    VariantController,
+    ProductController,
+    PosterController,
+    CouponCodeController,
+  ],
+  providers: [
+    CategoryService,
+    SubCategoryService,
+    BrandService,
+    VariantTypeService,
+    VariantService,
+    ProductService,
+    PosterService,
+    CouponCodeService,
+  ],
 })
 export class AdminModule {}

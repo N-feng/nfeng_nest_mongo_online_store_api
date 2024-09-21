@@ -12,7 +12,7 @@ import { VariantTypeService } from './variant-type.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateSubCategoryDto } from '../sub-category/dto/subCategory.dto';
 
-@Controller('variant-type')
+@Controller('variantTypes')
 export class VariantTypeController {
   constructor(private readonly variantTypeService: VariantTypeService) {}
 

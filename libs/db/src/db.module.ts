@@ -6,6 +6,9 @@ import { SubCategory, SubCategorySchema } from './schemas/subCategory.schema';
 import { Brand, BrandSchema } from './schemas/brand.schema';
 import { Variant, VariantSchema } from './schemas/variant.schema';
 import { VariantType, VariantTypeSchema } from './schemas/variantType.schema';
+import { Product, ProductSchema } from './schemas/product.schema';
+import { Poster, PosterSchema } from './schemas/poster.schema';
+import { Coupon, CouponSchema } from './schemas/couponCode';
 
 const models = MongooseModule.forFeature([
   { name: Category.name, schema: CategorySchema, collection: 'category' },
@@ -28,6 +31,21 @@ const models = MongooseModule.forFeature([
     name: VariantType.name,
     schema: VariantTypeSchema,
     collection: 'varianttypes',
+  },
+  {
+    name: Product.name,
+    schema: ProductSchema,
+    collection: 'products',
+  },
+  {
+    name: Poster.name,
+    schema: PosterSchema,
+    collection: 'posters',
+  },
+  {
+    name: Coupon.name,
+    schema: CouponSchema,
+    collection: 'coupons',
   },
 ]);
 
