@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-SERVERLESS=1 /var/lang/node12/bin/node ./dist/main.js
+SERVERLESS=1 /var/lang/node18/bin/node ./dist/main.js
