@@ -15,11 +15,8 @@ export class CouponCodeService {
       .populate('applicableProduct', 'id name');
   }
 
-  async findOne(id) {
-    const u = await this.couponModel.findOne({
-      where: { id },
-      // include: [Access],
-    });
+  async findOne(body) {
+    const u = await this.couponModel.findOne(body);
     if (!u) {
       throw new BadRequestException({ code: 400, msg: 'Coupon not found.' });
     }
@@ -37,7 +34,9 @@ export class CouponCodeService {
   }
 
   async update(id, user) {
-    return await this.couponModel.findByIdAndUpdate({ _id: id }, user);
+    return await this.couponModel.findByIdAndUpdate({ _id: id }, user, {
+      new: true,
+    });
   }
 
   async delete(id) {

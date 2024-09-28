@@ -16,6 +16,13 @@ import { PosterService } from './poster/poster.service';
 import { PosterController } from './poster/poster.controller';
 import { CouponCodeService } from './coupon-code/coupon-code.service';
 import { CouponCodeController } from './coupon-code/coupon-code.controller';
+import { UserService } from './user/user.service';
+import { UserController } from './user/user.controller';
+import { OrderService } from './order/order.service';
+import { OrderController } from './order/order.controller';
+import { PaymentController } from './payment/payment.controller';
+import { NotificationService } from './notification/notification.service';
+import { NotificationController } from './notification/notification.controller';
 
 @Module({
   imports: [CommonModule],
@@ -28,6 +35,10 @@ import { CouponCodeController } from './coupon-code/coupon-code.controller';
     ProductController,
     PosterController,
     CouponCodeController,
+    UserController,
+    OrderController,
+    PaymentController,
+    NotificationController,
   ],
   providers: [
     CategoryService,
@@ -38,6 +49,9 @@ import { CouponCodeController } from './coupon-code/coupon-code.controller';
     ProductService,
     PosterService,
     CouponCodeService,
+    UserService,
+    OrderService,
+    NotificationService,
   ],
 })
 export class AdminModule {}

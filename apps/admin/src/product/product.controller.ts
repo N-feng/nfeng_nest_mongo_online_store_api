@@ -61,6 +61,7 @@ export class ProductController {
     return { code: 200, data: user };
   }
 
+  // create new product
   @Post('/')
   @ApiOperation({ summary: '创建产品' })
   @UseFilters(new ExceptionsLoggerFilter())
@@ -87,7 +88,6 @@ export class ProductController {
     @UploadedFiles()
     files: Array<Express.Multer.File>,
   ) {
-    // console.log('files: ', files);
     // Extract product data from the request body
     const {
       name,
@@ -121,35 +121,12 @@ export class ProductController {
 
     // Iterate over the file fields
     const fields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-    // fields.forEach(async (field, index) => {
-    //   if (files[field] && files[field].length > 0) {
-    //     const file = files[field][0];
-    //     // console.log('file: ', file);
-    //     // const imageUrl = `http://localhost:3000/image/products/${file.filename}`;
-    //     const source = file.buffer;
-    //     const filename = this.toolsService.getCosUploadFile(
-    //       file.originalname,
-    //       'product',
-    //     );
-
-    //     //异步 改成 同步
-    //     await this.toolsService.uploadCos(filename, source);
-
-    //     const imageUrl = process.env.cosUrl + '/' + filename;
-
-    //     imageUrls.push({ image: index + 1, url: imageUrl });
-    //   }
-    // });
 
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i];
       if (files[field] && files[field].length > 0) {
         const file = files[field][0];
-        // console.log('file: ', file);
-        // const imageUrl = `http://localhost:3000/image/products/${file.filename}`;
-
-        const imageUrl = this.toolsService.uploadFile(file, 'product');
-
+        const imageUrl = await this.toolsService.uploadFile(file, 'product');
         imageUrls.push({ image: i + 1, url: imageUrl });
       }
     }
@@ -178,6 +155,7 @@ export class ProductController {
     });
   }
 
+  // Update a product
   @Put('/:id')
   @ApiOperation({ summary: '编辑产品' })
   // @UseFilters(new ExceptionsLoggerFilter())
@@ -243,7 +221,6 @@ export class ProductController {
 
     // Iterate over the file fields to update images
     const fields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-
     for (let index = 0; index < fields.length; index++) {
       const field = fields[index];
       if (files[field] && files[field].length > 0) {
@@ -262,6 +239,7 @@ export class ProductController {
       }
     }
 
+    // Save the updated product
     await this.productService.update(productId, productToUpdate);
     res.json({ success: true, message: 'Product updated successfully.' });
   }

@@ -7,9 +7,11 @@ import {
   Post,
   Put,
   Query,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { CategoryService } from './category.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateCategoryDto } from './dto/category.dto';
@@ -41,24 +43,35 @@ export class CategoryController {
     return { code: 200, data: user };
   }
 
+  // Create a new category with image upload
   @Post('/')
   @ApiOperation({ summary: '创建分类' })
   @UseInterceptors(FileInterceptor('img'))
   async create(
     @Body() body: CreateCategoryDto,
-    @UploadedFile() img: Express.Multer.File,
+    @Res() res: Response,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    if (img) {
-      const source = img.buffer;
-      console.log('source: ', source);
-      const filename = this.toolsService.getCosUploadFile(
-        img.originalname,
-        'category',
-      );
-      console.log('filename: ', filename);
+    const { name } = body;
+    let imageUrl = 'no_url';
+    if (file) {
+      imageUrl = await this.toolsService.uploadFile(file, 'category');
     }
-    await this.categoryService.create(body);
-    return { code: 200, data: {} };
+    console.log('url ', file);
+
+    if (!name) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Name is required.' });
+    }
+
+    await this.categoryService.create({ ...body, image: imageUrl });
+
+    res.json({
+      success: true,
+      message: 'Category created successfully.',
+      data: null,
+    });
   }
 
   @Put('/:id')
@@ -67,32 +80,37 @@ export class CategoryController {
   async update(
     @Param('id') id: string,
     @Body() body: CreateCategoryDto,
-    @UploadedFile() img: Express.Multer.File,
+    @Res() res: Response,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    if (img) {
-      const source = img.buffer;
-      const filename = this.toolsService.getCosUploadFile(
-        img.originalname,
-        'category',
-      );
+    const { name } = body;
+    let image = body.image;
 
-      //异步 改成 同步
-      await this.toolsService.uploadCos(filename, source);
-
-      const image = process.env.cosUrl + '/' + filename;
-      await this.categoryService.update(id, { ...body, image: image });
-      return {
-        success: true,
-        message: 'Category updated successfully.',
-        data: null,
-      };
+    if (file) {
+      image = await this.toolsService.uploadFile(file, 'category');
     }
 
-    return {
+    if (!name || !image) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Name and image are required.' });
+    }
+
+    const updatedCategory = await this.categoryService.update(id, {
+      ...body,
+      image: image,
+    });
+    if (!updatedCategory) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Category not found.' });
+    }
+
+    res.json({
       success: true,
-      message: 'Error updating category: no img',
+      message: 'Category updated successfully.',
       data: null,
-    };
+    });
   }
 
   @Delete('/:id')

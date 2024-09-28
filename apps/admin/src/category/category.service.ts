@@ -35,7 +35,9 @@ export class CategoryService {
   }
 
   async update(id, user) {
-    return await this.categoryModel.findByIdAndUpdate({ _id: id }, user);
+    return await this.categoryModel.findByIdAndUpdate({ _id: id }, user, {
+      new: true,
+    });
   }
 
   async delete(id) {
